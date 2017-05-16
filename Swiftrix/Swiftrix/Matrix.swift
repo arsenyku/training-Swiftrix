@@ -11,20 +11,20 @@ import Foundation
 infix operator ●:MultiplicationPrecedence
 infix operator ✕:MultiplicationPrecedence
 
-func ●(lhs: Matrix, rhs: Matrix) -> Matrix?
+func ●<T>(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T>?
 {
   return lhs.dot(rhs)
 }
 
-func ✕(lhs: Matrix, rhs: Matrix) -> Matrix?
+func ✕<T>(lhs: Matrix<T>, rhs: Matrix<T>) -> Matrix<T>?
 {
   return lhs.cross(rhs)
 }
 
 
-class Matrix: CustomStringConvertible, Equatable
+class Matrix<T:MatrixElement>: CustomStringConvertible, Equatable
 {
-  let rows: [[Float]]
+  let rows: [[T]]
   
   var columnCount: Int
   {
@@ -41,7 +41,7 @@ class Matrix: CustomStringConvertible, Equatable
     return nil
   }
   
-  required init?(_ contents:[[Float]])
+  required init?(_ contents:[[T]])
   {
     let rowLength = contents.first?.count ?? 0
     for row in contents
@@ -71,43 +71,20 @@ class Matrix: CustomStringConvertible, Equatable
       let otherTranspose = other.𝞣
     else { return nil }
     
-    let x:[[Float]] = (0 ..< rowCount).map({ r in
-      let y:[Float] = (0 ..< otherColCount).map({ c in
+    let result:[[T]] = (0 ..< rowCount).map({ r in
+      let resultRow:[T] = (0 ..< otherColCount).map({ c in
         let row = rows[r]
         let col = otherTranspose.rows[c]
         
-        let z = (0..<columnCount).reduce(0, { sum, i in sum + (row[i] * col[i]) })
-        return z
+        let resultElement = (0..<columnCount).reduce(0 as! T, { (sum, i) -> T in sum + (row[i] * col[i]) })
+        return resultElement
       })
-      return y
+      return resultRow
     })
     
-    return Matrix(x)
+    return Matrix(result)
   }
   
-//  fileprivate func dot1(_ other:Matrix) -> Matrix?
-//  {
-//    guard columnCount == other.rows.count else { return nil }
-//    
-//    let otherColCount = other.columnCount
-//    let otherTranspose = other.𝞣!
-//    
-//    for r in 0..<rows.count
-//    {
-//      for c in 0..<otherColCount
-//      {
-//        let row = rows[r]
-//        let col = otherTranspose.rows[c]
-//        var sum:Float = 0
-//        for i in 0..<columnCount
-//        {
-//          sum += row[i] * col[i]
-//        }
-//        
-//      }
-//    }
-//  }
-
   fileprivate func cross(_ other:Matrix) -> Matrix?
   {
     return self

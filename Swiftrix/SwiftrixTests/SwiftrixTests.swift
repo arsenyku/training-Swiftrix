@@ -59,7 +59,7 @@ class SwiftrixTests: XCTestCase
     
     assert (m1 != m3)
     
-    let m4 = Matrix([[1,2],[3,4],[5,6]])
+    let m4 = Matrix([[1,2],[3,4],[5,6]])!
     
     assert (m1 != m4)
   }

@@ -28,9 +28,10 @@ func *<T: Multiplicative> (lhs: T, rhs: T) -> T
   return lhs * rhs;
 }
 
-protocol MatrixElement: Additive, Multiplicative
+protocol MatrixElement: Additive, Multiplicative, Equatable
 {
 }
 
 extension Int:MatrixElement {}
 extension Float:MatrixElement {}
+extension Double:MatrixElement {}
